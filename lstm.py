@@ -22,9 +22,9 @@ from tensorflow.keras.preprocessing import sequence
 from tensorflow.keras.preprocessing.text import Tokenizer
 
 
-train = pd.read_csv("/Users/ttonny0326/GitHub_Project/LSTM_wikipedia/train.csv", encoding='ISO-8859-1', low_memory=False)
-test_labels = pd.read_csv("/Users/ttonny0326/GitHub_Project/LSTM_wikipedia/test_labels.csv", encoding='ISO-8859-1', low_memory=False)
-test = pd.read_csv("/Users/ttonny0326/GitHub_Project/LSTM_wikipedia/train.csv", encoding='ISO-8859-1', low_memory=False)
+train = pd.read_csv("Comments/train.csv", encoding='ISO-8859-1', low_memory=False)
+test_labels = pd.read_csv("Comments/test_labels.csv", encoding='ISO-8859-1', low_memory=False)
+test = pd.read_csv("Comments/train.csv", encoding='ISO-8859-1', low_memory=False)
 
 stopwords = set(stopwords.words('english'))
 nltk.download('stopwords')

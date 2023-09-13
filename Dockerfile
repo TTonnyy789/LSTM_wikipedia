@@ -3,4 +3,4 @@ COPY . /app
 WORKDIR /app
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-CMD ["python", "LSTM_prediction.py"]
+CMD ["python", "LSTM_classification.py"]
