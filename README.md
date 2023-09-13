@@ -5,7 +5,7 @@ This is the project that uses the LSTM model to classify emotions based on input
 This classification model was trained in comments based on Wikipedia. The expected effect is to classify the most related toxic level for the input article, and there are 6 different level will present after you input your text and calculate the probability between the level and input text, such as toxic, severe_toxic, and insult etc.
 
 <p float="left">
-  <img src="https://github.com/TTonnyy789/Pictueres/blob/main/LSTM/png-transparent-keras-logo.png" width="400" />
+  <img src="https://github.com/TTonnyy789/Pictueres/blob/main/LSTM/1200px-Keras_logo.svg.png" width="400" />
   <img src="https://github.com/TTonnyy789/Pictueres/blob/main/Topic_Modelling/docker%20logo1.png" width="400" /> 
 </p>
 
