@@ -5,7 +5,7 @@ This is the project that uses the LSTM model to classify emotions based on input
 This classification model was trained in comments based on Wikipedia. The expected effect is to classify the most related toxic level for the input article, and there are 6 different level will present after you input your text and calculate the probability between the level and input text, such as toxic, severe_toxic, and insult etc.
 
 <p float="left">
-  <img src="https://github.com/TTonnyy789/Pictueres/blob/main/Topic_Modelling/Bertopic%20logo1.png" width="400" />
+  <img src="https://github.com/TTonnyy789/Pictueres/blob/main/LSTM/png-transparent-keras-logo.png" width="400" />
   <img src="https://github.com/TTonnyy789/Pictueres/blob/main/Topic_Modelling/docker%20logo1.png" width="400" /> 
 </p>
 
@@ -37,13 +37,13 @@ This classification model was trained in comments based on Wikipedia. The expect
 
 The application is written in Python and requires Python 3.8.13 on Apple Silicon device. Dependencies are listed in the `requirements.txt` file in this repository, which include:
 
-- BERTopic
+- nltk
 - numpy
 - pandas
 - seaborn
-- transformers
 - tokenizers
 - scikit-learn
+- tensorflow
 
 For a complete list of dependencies and their versions, refer to `requirements.txt`.
 
@@ -57,12 +57,12 @@ For a complete list of dependencies and their versions, refer to `requirements.t
 ### Pulling the Docker Image
 
 ```bash
-docker pull ttonnyy789/bertopic-bb:latest
+docker pull ttonnyy789/lstm-tt:latest
 ```
 
 ### Running on Docker container
 ```bash
-docker run -it --rm ttonnyy789/bertopic-bb
+docker run -it --rm ttonnyy789/lstm-tt
 ```
 
 Once you execute the command, the follow result will present on your terminal. After the `Enter text:` appear you can provide any text input when prompted to get the related topics.
