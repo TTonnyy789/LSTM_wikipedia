@@ -1,12 +1,16 @@
+import re
+import nltk
+import pickle
+from nltk.corpus import stopwords
 from keras.models import load_model
 from keras.preprocessing.text import Tokenizer
 from keras_preprocessing.sequence import pad_sequences
-import re
-import nltk
-from nltk.corpus import stopwords
 
 # Assuming the Tokenizer was fit on the entire dataset before saving the model
-tokenizer = Tokenizer(num_words=40000)
+# tokenizer = Tokenizer(num_words=40000)
+with open('tokenizer.pickle', 'rb') as handle:
+    tokenizer = pickle.load(handle)
+
 nltk.download('stopwords')
 stop_words = set(stopwords.words('english'))
 
@@ -42,17 +46,37 @@ def clean_text(text):
 
     return text
 
+LABELS = ['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate'] # You can adjust this threshold as needed
+
 def predict_topic(model, content):
     cleaned_content = clean_text(content)
     sequence = tokenizer.texts_to_sequences([cleaned_content])
     padded_sequence = pad_sequences(sequence, maxlen=150)
     
-    prediction = model.predict(padded_sequence)
-    print("Prediction:", prediction)
+    prediction = model.predict(padded_sequence)[0]  # Extracting the prediction list from its wrapping list
+    threshold = 0.5
+    for label, prob in zip(LABELS, prediction):
+        if prob >= threshold:
+            print(f"{label}: {prob:.2f} -> This is classified as {label} comment")
+        else:
+            print(f"{label}: {prob:.2f} -> Not {label} enough")
+    print("\n")
 
 if __name__ == "__main__":
     model_path = "lstm_model.h5" 
     model = load_model(model_path)
     while True:
-        text = input("Enter text: ")
-        predict_topic(model, text)
+        try:
+            text = input("Enter text (or type 'exit' to quit): ")
+            if text.lower() == 'exit':
+                break
+            predict_topic(model, text)
+        except Exception as e:
+            print(f"Error: {e}")
+
+
+
+
+
+
+

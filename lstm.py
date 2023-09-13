@@ -3,6 +3,7 @@ import nltk
 import numpy as np
 import pandas as pd
 import seaborn as sns
+import pickle
 from nltk.corpus import stopwords
 from sklearn.svm import LinearSVC
 from keras.preprocessing.text import Tokenizer
@@ -92,10 +93,8 @@ plt.title("Distribution of Word Nos.")
 plt.ylabel('No. of comments', fontsize=12)
 plt.xlabel('No. of words in each comments', fontsize=12)
 plt.show
-
 #橫軸為:每個評論的word數
 #縱軸為:評論個數
-
 
 train_padded =pad_sequences(train_final, maxlen=150)
 test_padded =pad_sequences(test_final, maxlen=150)
@@ -136,25 +135,24 @@ def build_model(hp):
     
     return model
 
-
 x_train, x_val, y_train, y_val = train_test_split(train_padded, train_label, shuffle = True, random_state = 123)
 
-tuner = RandomSearch(
-    build_model,
-    objective=Objective("val_auc", direction="max"),
-    max_trials=5,  # Number of model configurations to try
-    executions_per_trial=1,  # Number of times to fit each model (can be used to average results if desired)
-    directory='keras_tuner_dir',
-    project_name='lstm_tuning'
-)
+# tuner = RandomSearch(
+#     build_model,
+#     objective=Objective("val_auc", direction="max"),
+#     max_trials=5,  # Number of model configurations to try
+#     executions_per_trial=1,  # Number of times to fit each model (can be used to average results if desired)
+#     directory='keras_tuner_dir',
+#     project_name='lstm_tuning'
+# )
 
-tuner.search_space_summary()
+# tuner.search_space_summary()
 
-tuner.search(x_train, y_train,
-            epochs=3,
-            validation_data=(x_val, y_val),
-            batch_size = 70
-)
+# tuner.search(x_train, y_train,
+#             epochs=3,
+#             validation_data=(x_val, y_val),
+#             batch_size = 70
+# )
 
 # Build the model with the best hyperparameters
 model = Sequential()
@@ -170,19 +168,24 @@ model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['AUC'])
 # Check the model architecture
 model.summary()
 
+# # find out the best value of batch size and epoch
+# for batch_size in [32,50,64,70,128]:
+#     for epochs in [1,2,3]:  
+#         model = Sequential()
+#         model.add(Embedding(input_dim=40000,output_dim=64, input_length=150))  
+#         model.add(LSTM(units = 64, dropout = 0.2,return_sequences=True))
+#         model.add(LSTM(units = 64, dropout = 0.2))
+#         model.add(Dense(units = 6, activation = 'sigmoid'))
+#         model.compile(loss = "binary_crossentropy", optimizer = "adam", metrics = ["AUC"])
+#         x_train, x_val, y_train, y_val = train_test_split(train_padded, train_label, shuffle = True, random_state = 123)
+#         #對參數每種組合，訓練一個SVC
+#         history=model.fit(x_train, y_train, batch_size = batch_size, epochs = epochs, validation_data = (x_val, y_val))
+#         #用驗證資料集(valid set)評估SVC
 
-for batch_size in [32,50,64,70,128]:
-    for epochs in [1,2,3]:  
-        model = Sequential()
-        model.add(Embedding(input_dim=40000,output_dim=64, input_length=150))  
-        model.add(LSTM(units = 64, dropout = 0.2,return_sequences=True))
-        model.add(LSTM(units = 64, dropout = 0.2))
-        model.add(Dense(units = 6, activation = 'sigmoid'))
-        model.compile(loss = "binary_crossentropy", optimizer = "adam", metrics = ["AUC"])
-        x_train, x_val, y_train, y_val = train_test_split(train_padded, train_label, shuffle = True, random_state = 123)
-        #對參數每種組合，訓練一個SVC
-        history=model.fit(x_train, y_train, batch_size = batch_size, epochs = epochs, validation_data = (x_val, y_val))
-        #用驗證資料集(valid set)評估SVC
+# Train the model after finding all the best hyperparameter 
+x_train, x_val, y_train, y_val = train_test_split(train_padded, train_label, shuffle=True, random_state=123)
+history = model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=3, batch_size=70)
+
 
 plt.figure(figsize=(10,5))
 plt.plot(history.history['loss'], label='Training Loss')
@@ -202,4 +205,16 @@ plt.ylabel('AUC')
 plt.legend()
 plt.show()
 
+
+# Save the tokenizer
+# In this case, saving the tokenizer is essential due to the reason that this project was using the comment from the Internet
+# Therefore, if any user tend to use this model, they must use the same data set or data pool from the train data
+with open('tokenizer.pickle', 'wb') as handle:
+    pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
 model.save('lstm_model.h5')
+
+
+### Data preprocessing / train-test split / the function of model-building for Random Search(the value of the model itself)
+### Model compile / Model fit / Result visualization / Model saving
