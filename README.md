@@ -94,7 +94,7 @@ docker pull ttonnyy789/lstm-tt:latest
 docker run -it --rm ttonnyy789/lstm-tt
 ```
 
-Once you execute the command, the follow result will present on your terminal. After the `Enter text: (or type 'exit' to quit):` appear you can provide any text input when prompted to classify your comment.
+Once you execute the command, the follow result will present on your terminal. After the `Enter text: (or type 'exit' to quit):` appear you can provide any text input when prompted to classify your comment(The threshold was set to '0.5' which means once the probability of certain comment identified as each label are over '50%' then this comment will recognized as one of the toxic comment).
 
 
 <img src="https://github.com/TTonnyy789/Pictueres/blob/main/LSTM/toxic_example.jpg" alt="Image1" width="600"/>
