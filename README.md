@@ -13,46 +13,74 @@ This classification model was trained in comments based on Wikipedia. The expect
 
 ## Table of Contents
 
-- [Features](#features)
-- [Software and Tools Requirements](#software-and-tools-requirements)
-- [Python Environment and Dependencies](#python-environment-and-dependencies)
-- [Getting Started](#getting-started)
-- [Building the Docker Image Locally](#building-the-docker-image-locally-optional)
+- [Data Preprocessing](#data-preprocessing)
+- [Model Architecture](#model-architecture)
+- [Hyperparameter Tuning](#hyperparameter-tuning)
+- [Training and Validation](#training-and-validation)
+- [Results Visualization](#results-visualization)
+- [Saving and Loading](#saving-and-loading)
+- [Usage](#usage)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 
-## Features 
+## Data Preprocessing 
+The data is sourced from CSV files. Comments in the dataset undergo a series of preprocessing steps:
 
-- **Model Loading**: Seamlessly load a pre-trained BERTopic model.
-- **Prediction Endpoint**: Provide any text input to identify the top related topics.
-- **Cross-Platform Docker Support**: Built for compatibility across both AMD64 & ARM64 architectures.
+- Lowercasing
+- Replacing contractions and specific patterns
+- Removing non-word characters
+- Removing stopwords (using the NLTK library)
+- Tokenization (converting text into sequences of integers)
 
-## Software And Tools Requirements
+## Model Architecture
+The model is constructed using the Keras Sequential API. It comprises:
 
-- **Docker**: Ensure Docker is installed on your machine. [Download Docker](https://www.docker.com/products/docker-desktop)
-- **VSCodeIDE**: Main platform to compose your code. [Download VSCodeIDE](https://code.visualstudio.com)
-- **Git** (Optional): For cloning and contributing to the repository. [Download Git](https://git-scm.com/downloads)
+- Embedding layer: Converts tokenized sequences into dense vectors
+- Two LSTM layers: Captures sequential dependencies and patterns in the tokenized sequences
+- Dense layer: Outputs probabilities for each class
 
-## Python Environment and Dependencies
+## Hyperparameter Tuning
 
-The application is written in Python and requires Python 3.8.13 on Apple Silicon device. Dependencies are listed in the `requirements.txt` file in this repository, which include:
+The model's performance largely hinges on selecting the right hyperparameters. In this project, we use Random Search to search across a range of values for:
 
-- nltk
-- numpy
-- pandas
-- seaborn
-- tokenizers
-- scikit-learn
-- tensorflow
+- Embedding layer output dimension
+- Number of units in the LSTM layers
+- Dropout rates for LSTM layers
+- Learning rate for the Adam optimizer
 
-For a complete list of dependencies and their versions, refer to `requirements.txt`.
+This approach ensures that we don't just rely on intuition or default values but systematically find the best hyperparameters for our dataset.
 
-## Getting Started
+<img src="https://github.com/TTonnyy789/Pictueres/blob/main/LSTM/hyperparameter_tuning.png" alt="Image1" width="600"/>
+
+## Training and Validation
+
+The dataset is split into training and validation sets. The model is then trained on the training set for a specified number of epochs, while the validation set is used to prevent overfitting and gauge the model's performance on unseen data.
+
+<img src="https://github.com/TTonnyy789/Pictueres/blob/main/LSTM/traing_and_validation.png" alt="Image1" width="600"/>
+
+## Results Visualization
+
+Post-training, we visualize the training and validation loss and AUC (Area Under Curve) across epochs. This helps in understanding how well the model is learning and whether it's overfitting or underfitting.
+
+<img src="https://github.com/TTonnyy789/Pictueres/blob/main/LSTM/results_visulization.png" alt="Image1" width="600"/>
+
+The following two pictures are the result of the AUC and LOSS value on both training data and validation data.
+
+<p float="left">
+  <img src="https://github.com/TTonnyy789/Pictueres/blob/main/LSTM/result1.png" width="400" />
+  <img src="https://github.com/TTonnyy789/Pictueres/blob/main/LSTM/result2.png" width="400" /> 
+</p>
+
+## Saving and Loading
+
+To ensure the model's reusability, both the model and the tokenizer are saved post-training. The saved model can then be loaded and used for predictions without having to undergo training again.
+
+## Usage
 
 ### Prerequisites
 
 - Docker installed on your machine.
-- Git for cloning the repository.
+- Git for cloning this repository.
 
 ### Pulling the Docker Image
 
@@ -61,31 +89,24 @@ docker pull ttonnyy789/lstm-tt:latest
 ```
 
 ### Running on Docker container
+
 ```bash
 docker run -it --rm ttonnyy789/lstm-tt
 ```
 
-Once you execute the command, the follow result will present on your terminal. After the `Enter text:` appear you can provide any text input when prompted to get the related topics.
-
-`Make sure there are no spaces or blank lines in the input text`
+Once you execute the command, the follow result will present on your terminal. After the `Enter text: (or type 'exit' to quit):` appear you can provide any text input when prompted to classify your comment.
 
 
-<img src="https://github.com/TTonnyy789/Pictueres/blob/main/Topic_Modelling/input.jpg" alt="Image1" width="600"/>
+<img src="https://github.com/TTonnyy789/Pictueres/blob/main/LSTM/toxic_example.jpg" alt="Image1" width="600"/>
 
 <!-- ![Docker file run successfully](https://github.com/TTonnyy789/Pictueres/blob/main/Topic_Modelling/input.jpg) -->
 
-### Here is a simple result.
-<img src="https://github.com/TTonnyy789/Pictueres/blob/main/Topic_Modelling/result.jpg" alt="Image1" width="600"/>
-
-<!-- ![Docker file run example](https://github.com/TTonnyy789/Pictueres/blob/main/Topic_Modelling/result.jpg) -->
-
-
 ## Building the Docker Image Locally (Optional)
 
-If you want to build the Docker image locally:
+If you want to build the Docker image locally especially you are using the M series Apple devices such as M1 Pro Macbook:
 
-The multi-platform docker image builder is required in this case. 
-Take M1 Apple Silicon device as an example:
+The multi-platform docker image builder is required in this case for the purpose of running this docker image successfully on other computer. 
+Let's take M1 Apple Silicon device as an example:
 
 ```bash
 docker buildx create --use
@@ -102,8 +123,8 @@ If it is successfully installed, you will be able to find a docker image on your
 Next step, execute the commands below, you would be able to build and run this docker file successfully.
 
 ```bash
-git clone https://github.com/TTonnyy789/Topic_Modelling.git
-cd Topic_Modelling
+git clone https://github.com/TTonnyy789/LSTM_wikipedia.git
+cd LSTM_wikipedia
 ```
 Once cloned this repositories from Github, you can run following commands and run this dockerized model locally. 
 
