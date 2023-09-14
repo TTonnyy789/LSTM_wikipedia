@@ -137,7 +137,7 @@ You can change `--load` to `--push` if you want to push this image onto your doc
 ```bash
 docker buildx build --platform linux/amd64,linux/arm64 -t ttonnyy789/bertopic-bb --load .
 ```
-Last but not least, execute this command and enjoy your topic predicting journey ! !
+Last but not least, execute this command and enjoy your comment classifying journey ! !
 
 ```bash
 docker run -it --rm ttonnyy789/bertopic-bb
