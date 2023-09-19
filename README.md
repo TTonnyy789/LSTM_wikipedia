@@ -148,5 +148,5 @@ docker run -it --rm ttonnyy789/lstm-tt
 
 ## Acknowledgements
 
-- Thanks to Docker and the BERTopic community for the foundational tools and resources.
+- Thanks to Docker and the Keras community for the foundational tools and resources.
 - Special thanks to ChatGPT for project troubleshooting guidance.
